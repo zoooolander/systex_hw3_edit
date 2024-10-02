@@ -8,9 +8,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>樂透號碼產生器</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="<%=request.getContextPath()%>/style/myStyle.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f4f4f4;
+        }
+        /* 自定義按鈕顏色 */
+        .btn-custom {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .btn-custom:hover {
+            background-color: #388E3C;
+        }
+    </style>
 </head>
-<body style="background-color: #f9f9f9;">
+<body>
 
 <div class="container d-flex justify-content-center align-items-center" style="height: 100vh;">
     <div class="text-center">
@@ -47,7 +59,7 @@
             %>
             <%-- End error report --%>
 
-            <button type="submit" class="btn btn-success btn-lg">產生號碼</button>
+            <button type="submit" class="btn btn-custom btn-lg">產生號碼</button>
         </form>
     </div>
 </div>

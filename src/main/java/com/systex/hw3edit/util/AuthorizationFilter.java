@@ -12,19 +12,20 @@ import java.io.IOException;
 public class AuthorizationFilter extends OncePerRequestFilter {
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+            throws ServletException, IOException {
         Object user = request.getSession().getAttribute("loggedIn");
 
-        if(request.getRequestURI().contains("/h2-console")){
+        if (request.getRequestURI().contains("/h2-console")) {
             filterChain.doFilter(request, response);
             return;
         }
 
-        if(user == null && !request.getRequestURI().endsWith("/login")&&!request.getRequestURI().endsWith("/register")){
-            response.sendRedirect(request.getContextPath()+"/login");
+        if (user == null && !request.getRequestURI().contains("/login") && !request.getRequestURI().contains("/register")) {
+            response.sendRedirect(request.getContextPath() + "/login");
             return;
         }
-        filterChain.doFilter(request,response);
+        filterChain.doFilter(request, response);
     }
 
 }

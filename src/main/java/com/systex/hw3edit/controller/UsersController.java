@@ -27,11 +27,19 @@ public class UsersController {
         return "login";
     }
 
+    /**
+     * @Description 登入處理
+     * @param email
+     * @param password
+     * @param session
+     * @param model
+     * @return
+     */
     @PostMapping("/login")
     public ModelAndView handleLogin(@RequestParam String email, @RequestParam String password,
                                     HttpSession session, Model model) {
 
-        Users user=null;
+        Users user = null;
 
         try {
             // 嘗試查找用戶
@@ -44,14 +52,13 @@ public class UsersController {
         // 檢查用戶是否存在並驗證密碼
         if (user != null) {
             session.setAttribute("loggedIn", user);
-            return new ModelAndView("redirect:/lottery/main"); // 重定向至 main.jsp
+            return new ModelAndView("lottery/main"); // 重定向至 main.jsp
         } else {
             model.addAttribute("error", "invalid email or password");
         }
 
         return new ModelAndView("login"); // 返回 login 視圖
     }
-
 
 
     @GetMapping("/register")

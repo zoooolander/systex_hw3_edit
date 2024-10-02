@@ -11,6 +11,14 @@
         body {
             background-color: #f4f4f4;
         }
+        /* 自定義登入按鈕顏色 */
+        .btn-custom {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .btn-custom:hover {
+            background-color: #388E3C;
+        }
     </style>
 </head>
 <body>
@@ -41,12 +49,16 @@
                 <input type="password" id="password" name="password" required class="form-control" placeholder="輸入密碼">
             </div>
 
-            <button type="submit" class="btn btn-success w-100">登入</button>
+            <button type="submit" class="btn btn-custom w-100">登入</button>
         </form>
-        <p class="mt-3 text-center"><a href="register.jsp">還沒有帳號？立即註冊</a></p>
+        <p class="mt-3 text-center">
+            <a href="<%= request.getContextPath() %>/register" onclick="event.preventDefault();
+                    window.location.href='<%= request.getContextPath() %>/register.jsp';">還沒有帳號？立即註冊</a>
+        </p>
     </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+
 </body>
 </html>

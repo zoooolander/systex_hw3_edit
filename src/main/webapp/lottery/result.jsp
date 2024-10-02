@@ -10,16 +10,25 @@
         body {
             background-color: #f4f4f4;
         }
+        /* 自定義按鈕顏色 */
+        .btn-custom {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .btn-custom:hover {
+            background-color: #388E3C;
+        }
     </style>
 </head>
 <body>
+
 <div class="container mt-5">
     <h1 class="text-center mb-4">樂透號碼結果</h1>
     <%
         List<Set<Integer>> lotteryNumbers = (List<Set<Integer>>) request.getAttribute("lotteryNumbers");
-        Integer numberOfSets = (Integer) request.getAttribute("numberOfSets"); // 使用 Integer 而不是 int
+        Integer numberOfSets = (Integer) request.getAttribute("numberOfSets");
 
-        if (lotteryNumbers != null && numberOfSets != null) { // 檢查 lotteryNumbers 和 numberOfSets 是否為 null
+        if (lotteryNumbers != null && numberOfSets != null) {
             for (int i = 0; i < numberOfSets; i++) {
                 List<Integer> sortedNumbers = new ArrayList<>(lotteryNumbers.get(i));
                 Collections.sort(sortedNumbers);
@@ -38,8 +47,7 @@
     %>
 
     <div class="mt-4 text-center">
-        <a href="main.jsp" class="btn btn-primary">重新產生號碼</a>
-        <a href="../index.jsp" class="btn btn-secondary">返回首頁</a>
+        <a href="main.jsp" class="btn btn-custom">重新產生號碼</a>
     </div>
 </div>
 

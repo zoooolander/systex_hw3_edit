@@ -6,70 +6,52 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>註冊</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
-            font-family: Arial, sans-serif;
             background-color: #f4f4f4;
-            margin: 0;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
         }
-        h1 {
-            color: #333;
-            margin-bottom: 20px;
-        }
-        form {
-            display: flex;
-            flex-direction: column;
-            width: 300px;
-        }
-        label {
-            margin-bottom: 10px;
-            color: #333;
-        }
-        input[type="text"], input[type="password"], input[type="email"] {
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            margin-bottom: 20px;
-        }
-        input[type="submit"] {
+        /* 自定義註冊按鈕顏色 */
+        .btn-custom {
             background-color: #4CAF50;
             color: white;
-            padding: 10px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s;
         }
-        input[type="submit"]:hover {
+        .btn-custom:hover {
             background-color: #388E3C;
-        }
-        a {
-            text-decoration: none;
-            color: #007BFF;
-            margin-top: 10px;
         }
     </style>
 </head>
 <body>
-<h1>註冊</h1>
-<form action="registerAction.jsp" method="post">
-    <label for="username">使用者名稱：</label>
-    <input type="text" id="username" name="username" required>
+<div class="container d-flex justify-content-center align-items-center" style="height: 100vh;">
+    <div class="card p-4" style="width: 300px;">
+        <h1 class="text-center mb-4">註冊</h1>
 
-    <label for="email">電子郵件：</label>
-    <input type="email" id="email" name="email" required>
+        <form action="register" method="post">
+            <div class="mb-3">
+                <label for="username" class="form-label">使用者名稱：</label>
+                <input type="text" id="username" name="username" required class="form-control" placeholder="輸入使用者名稱">
+            </div>
 
-    <label for="password">密碼：</label>
-    <input type="password" id="password" name="password" required>
+            <div class="mb-3">
+                <label for="email" class="form-label">電子郵件：</label>
+                <input type="email" id="email" name="email" required class="form-control" placeholder="輸入電子郵件">
+            </div>
 
-    <input type="submit" value="註冊">
-</form>
-<p><a href="login.jsp">已有帳號？立即登入</a></p>
+            <div class="mb-3">
+                <label for="password" class="form-label">密碼：</label>
+                <input type="password" id="password" name="password" required class="form-control" placeholder="輸入密碼">
+            </div>
+
+            <button type="submit" class="btn btn-custom w-100">註冊</button>
+        </form>
+
+        <p class="mt-3 text-center">
+            <a href="login.jsp">已有帳號？立即登入</a>
+        </p>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+
 </body>
 </html>
