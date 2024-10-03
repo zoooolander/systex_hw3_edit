@@ -60,12 +60,20 @@ public class UsersController {
         return new ModelAndView("login"); // 返回 login 視圖
     }
 
-
+    /**
+     * @Description 顯示註冊頁面
+     */
     @GetMapping("/register")
     public ModelAndView showRegisterPage() {
         return new ModelAndView("register.jsp", "user", new Users());
     }
 
+    /**
+     * @Description 註冊處理
+     * @param user
+     * @param model
+     * @return
+     */
     @PostMapping("/register")
     public ModelAndView handleRegister(@ModelAttribute Users user, Model model) {
         // 檢查此 email 是否已存在
@@ -79,6 +87,12 @@ public class UsersController {
             model.addAttribute("error", "Registration failed");
             return new ModelAndView("register");
         }
+        return new ModelAndView("redirect:/login");
+    }
+
+    @PostMapping("/logout")
+    public ModelAndView handleLogout(HttpSession session) {
+        session.removeAttribute("loggedIn");
         return new ModelAndView("redirect:/login");
     }
 

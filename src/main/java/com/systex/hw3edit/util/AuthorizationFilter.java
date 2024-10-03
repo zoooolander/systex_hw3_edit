@@ -16,11 +16,13 @@ public class AuthorizationFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
         Object user = request.getSession().getAttribute("loggedIn");
 
+        // 不阻擋資料庫
         if (request.getRequestURI().contains("/h2-console")) {
             filterChain.doFilter(request, response);
             return;
         }
 
+        // 不阻擋 login 和 register 頁面
         if (user == null && !request.getRequestURI().contains("/login") && !request.getRequestURI().contains("/register")) {
             response.sendRedirect(request.getContextPath() + "/login");
             return;
