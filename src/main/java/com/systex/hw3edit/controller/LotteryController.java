@@ -38,7 +38,7 @@ public class LotteryController {
 
         // 如果有錯誤，返回原頁面
         if (!errorMsgs.isEmpty()) {
-            return "main";
+            return "lottery/main";
         }
 
         // 2. 調用 Service 層產生樂透號碼

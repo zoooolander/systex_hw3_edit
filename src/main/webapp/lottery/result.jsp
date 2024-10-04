@@ -18,11 +18,27 @@
         .btn-custom:hover {
             background-color: #388E3C;
         }
+        /* 自定義登出連結的顏色 */
+        .logout-link {
+            color: blue;
+        }
+        .logout-link:hover {
+            color: darkblue;
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
 
 <div class="container mt-5">
+    <%-- 右上角的登出連結 --%>
+    <div class="d-flex justify-content-end mb-3">
+        <a href="#" class="logout-link" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">登出</a>
+        <form id="logout-form" action="<%= request.getContextPath() %>/logout" method="post" style="display: none;">
+            <!-- 隱藏表單，使用JavaScript觸發POST請求 -->
+        </form>
+    </div>
+
     <h1 class="text-center mb-4">樂透號碼結果</h1>
     <%
         List<Set<Integer>> lotteryNumbers = (List<Set<Integer>>) request.getAttribute("lotteryNumbers");
@@ -47,7 +63,7 @@
     %>
 
     <div class="mt-4 text-center">
-        <a href="main.jsp" class="btn btn-custom">重新產生號碼</a>
+        <a href="<%= request.getContextPath() %>/lottery/main.jsp" class="btn btn-custom">重新產生號碼</a>
     </div>
 </div>
 

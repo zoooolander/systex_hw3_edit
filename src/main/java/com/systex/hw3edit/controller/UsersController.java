@@ -52,6 +52,7 @@ public class UsersController {
         // 檢查用戶是否存在並驗證密碼
         if (user != null) {
             session.setAttribute("loggedIn", user);
+            session.setAttribute("username", user.getUsername());
             return new ModelAndView("lottery/main"); // 重定向至 main.jsp
         } else {
             model.addAttribute("error", "invalid email or password");
