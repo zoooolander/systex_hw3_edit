@@ -2,15 +2,21 @@ package com.systex.hw3edit.controller;
 
 import com.systex.hw3edit.model.Users;
 import com.systex.hw3edit.repository.UsersRepository;
+import com.systex.hw3edit.service.UsersService;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.servlet.ModelAndView;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 @Controller
 public class UsersController {
@@ -18,8 +24,11 @@ public class UsersController {
     @Autowired
     private UsersRepository usersRepository;
 
+    @Autowired
+    private UsersService usersService;
+
     /**
-     * @Description 顯示登入頁面
+     * 顯示登入頁面
      */
     @GetMapping("/login")
     public String showLoginPage(Model model) {
@@ -28,41 +37,44 @@ public class UsersController {
     }
 
     /**
-     * @Description 登入處理
-     * @param email
-     * @param password
-     * @param session
-     * @param model
-     * @return
+     * 處理登入邏輯
      */
     @PostMapping("/login")
-    public ModelAndView handleLogin(@RequestParam String email, @RequestParam String password,
-                                    HttpSession session, Model model) {
-
-        Users user = null;
-
-        try {
-            // 嘗試查找用戶
-            user = usersRepository.findByEmailAndPassword(email, password);
-        } catch (Exception e) {
-            model.addAttribute("error");
-            return new ModelAndView("login");
+    public ModelAndView handleLogin(HttpSession session, Model model) {
+        if (session.getAttribute("loggedIn") != null) {
+            return new ModelAndView("redirect:/lottery/main.jsp");
         }
 
-        // 檢查用戶是否存在並驗證密碼
-        if (user != null) {
-            session.setAttribute("loggedIn", user);
-            session.setAttribute("username", user.getUsername());
-            return new ModelAndView("lottery/main"); // 重定向至 main.jsp
-        } else {
-            model.addAttribute("error", "invalid email or password");
-        }
-
-        return new ModelAndView("login"); // 返回 login 視圖
+        model.addAttribute("error", "Invalid email or password");
+        return new ModelAndView("login");
     }
 
+//    /**
+//     * 處理 AJAX 登入邏輯
+//     */
+//    @PostMapping("/ajax_login")
+//    public ResponseEntity<Map<String, Object>> handleAjaxLogin(@RequestBody Map<String, String> loginData,
+//                                                               HttpSession session) {
+//        String email = loginData.get("email");
+//        String password = loginData.get("password");
+//
+//        Users user = usersRepository.findByEmailAndPassword(email, password);
+//        Map<String, Object> response = new HashMap<>();
+//
+//        if (user != null) {
+//            session.setAttribute("loggedIn", user);
+//            session.setAttribute("username", user.getUsername());
+//            response.put("success", true);
+//        } else {
+//            response.put("success", false);
+//            response.put("message", "Invalid email or password");
+//        }
+//
+//        return ResponseEntity.ok(response);
+//    }
+
     /**
-     * @Description 顯示註冊頁面
+     * 顯示註冊頁面
      */
     @GetMapping("/register")
     public ModelAndView showRegisterPage() {
@@ -70,31 +82,33 @@ public class UsersController {
     }
 
     /**
-     * @Description 註冊處理
-     * @param user
-     * @param model
-     * @return
+     * 處理註冊邏輯
      */
     @PostMapping("/register")
-    public ModelAndView handleRegister(@ModelAttribute Users user, Model model) {
-        // 檢查此 email 是否已存在
-        if (usersRepository.findByEmail(user.getEmail()) != null) {
-            model.addAttribute("error", "This email already exists");
-            return new ModelAndView("register");
+    private ModelAndView handleRegister(HttpServletRequest request, HttpServletResponse response, Model model, HttpSession session)
+            throws ServletException, IOException {
+
+        // 檢查用戶是否已登入，防止已登入用戶重複註冊
+        if (session != null && session.getAttribute("loggedIn") != null) {
+            return new ModelAndView("redirect:/login");
         }
+
         try {
-            usersRepository.save(user);
+            // 成功後重定向到登入頁面
+            return new ModelAndView("redirect:/login");
         } catch (Exception e) {
-            model.addAttribute("error", "Registration failed");
-            return new ModelAndView("register");
+            // 如果註冊失敗，顯示錯誤信息並返回註冊頁面
+            model.addAttribute("error", "The email already exists!");
+            return new ModelAndView("/register");
         }
-        return new ModelAndView("redirect:/login");
     }
 
+    /**
+     * 處理登出邏輯
+     */
     @PostMapping("/logout")
     public ModelAndView handleLogout(HttpSession session) {
         session.removeAttribute("loggedIn");
         return new ModelAndView("redirect:/login");
     }
-
 }

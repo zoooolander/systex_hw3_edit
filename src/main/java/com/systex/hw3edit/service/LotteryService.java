@@ -37,6 +37,7 @@ public class LotteryService {
         Set<Integer> excludeNumbers = new HashSet<>();
         String[] inputNumbers = excludeNumbersStr.split(" ");
 
+        // todo 修改架構，太多層了！可參考 guard clause
         if (inputNumbers.length != 5) {
             errorMsgs.add("請輸入正好 5 個數字！");
         } else {
