@@ -45,9 +45,10 @@ public class UsersController {
             return new ModelAndView("redirect:/lottery/main.jsp");
         }
 
-        model.addAttribute("error", "Invalid email or password");
+        model.addAttribute("error", "找不到用戶，請先註冊");
         return new ModelAndView("login");
     }
+
 
 //    /**
 //     * 處理 AJAX 登入邏輯
@@ -85,21 +86,14 @@ public class UsersController {
      * 處理註冊邏輯
      */
     @PostMapping("/register")
-    private ModelAndView handleRegister(HttpServletRequest request, HttpServletResponse response, Model model, HttpSession session)
-            throws ServletException, IOException {
-
-        // 檢查用戶是否已登入，防止已登入用戶重複註冊
-        if (session != null && session.getAttribute("loggedIn") != null) {
-            return new ModelAndView("redirect:/login");
-        }
-
+    public ModelAndView handleRegister(@ModelAttribute Users user, HttpServletRequest request, Model model) {
         try {
-            // 成功後重定向到登入頁面
-            return new ModelAndView("redirect:/login");
+            usersService.register(user.getEmail(), user.getPassword(), user.getUsername());
+            return new ModelAndView("redirect:/login"); // 註冊成功後重定向至登入頁面
         } catch (Exception e) {
-            // 如果註冊失敗，顯示錯誤信息並返回註冊頁面
-            model.addAttribute("error", "The email already exists!");
-            return new ModelAndView("/register");
+            //ModelAndView modelAndView = new ModelAndView("register");
+            model.addAttribute("error", e.getMessage()); // 設置錯誤訊息
+            return new ModelAndView("register"); // 返回註冊頁面並顯示錯誤訊息
         }
     }
 

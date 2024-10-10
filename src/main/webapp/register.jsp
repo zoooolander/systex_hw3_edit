@@ -26,6 +26,18 @@
     <div class="card p-4" style="width: 300px;">
         <h1 class="text-center mb-4">註冊</h1>
 
+        <%-- 錯誤訊息顯示區域 --%>
+        <%
+            String error = (String) request.getAttribute("error");
+            if (error != null) {
+        %>
+        <div class="alert alert-danger" role="alert">
+            <%= error %>
+        </div>
+        <%
+            }
+        %>
+
         <form action="register" method="post">
             <div class="mb-3">
                 <label for="username" class="form-label">使用者名稱：</label>

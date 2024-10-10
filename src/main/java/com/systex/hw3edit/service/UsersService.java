@@ -19,7 +19,7 @@ public class UsersService {
 
         // 檢查帳號密碼是否正確
         if (loginUser == null) {
-            throw new Exception("找不到用戶");
+            throw new Exception("電子信箱或密碼錯誤");
         }
 
         return loginUser;
@@ -27,19 +27,19 @@ public class UsersService {
 
     public Users register(@ModelAttribute String email, String password, String username)//, Model model)
             throws Exception {
-         //檢查此 email 是否已存在
+        // 檢查此 email 是否已存在
         Users existedUser = usersRepository.findByEmail(email);
-        if(existedUser != null){
-            throw new Exception("This email already exists");
+        if (existedUser != null) {
+            throw new Exception("此電子郵件已存在");
         }
 
-        Users registerUser = new Users();
-        registerUser.setEmail(email);       // 設置 email
-        registerUser.setPassword(password); // 設置 password
-        registerUser.setUsername(username); // 設置 userName
-        usersRepository.save(registerUser);
+        Users newUser = new Users();
+        newUser.setEmail(email);       // 設置 email
+        newUser.setPassword(password); // 設置 password
+        newUser.setUsername(username); // 設置 username
+        usersRepository.save(newUser); // 保存新用戶
 
-        return registerUser;
+        return newUser; // 返回新用戶資料
     }
 
 }

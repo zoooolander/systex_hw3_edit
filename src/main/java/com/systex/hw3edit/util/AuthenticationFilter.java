@@ -44,7 +44,7 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 
         // 處理註冊請求
         if (isRegisterRequest(request)) {
-            handleRegister(request, session);
+            handleRegister(request, response, session);
         }
 
         // 繼續處理其他請求
@@ -70,26 +70,35 @@ public class AuthenticationFilter extends OncePerRequestFilter {
     private void handleLogin(HttpServletRequest request, HttpSession session) {
         String email = request.getParameter("email");
         String password = request.getParameter("password");
-
+        Users loginUser = null;
         try {
-            Users loginUser = usersService.login(email, password);
+            loginUser = usersService.login(email, password);
+
+        } catch (Exception e) {
+            request.setAttribute("error", "請先登入");
+            return;
+        }
+        if (loginUser != null) {
             session.setAttribute("loggedIn", loginUser);
             session.setAttribute("username", loginUser.getUsername());
-        } catch (Exception e) {
-            request.setAttribute("error", "Invalid email or password");
+        } else {
+            request.setAttribute("error", "電子信箱或密碼錯誤");
         }
     }
 
     // 處理註冊邏輯
-    private void handleRegister(HttpServletRequest request, HttpSession session) {
+    private void handleRegister(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
         String email = request.getParameter("email");
         String password = request.getParameter("password");
         String userName = request.getParameter("username");
 
         try {
-            Users user = usersService.register(email, password, userName);
+            usersService.register(email, password, userName);
+            // 註冊成功後可重定向至登入頁面
+            response.sendRedirect(request.getContextPath() + "/login");
         } catch (Exception e) {
-            request.setAttribute("error", "Registration failed");
+            request.setAttribute("error", "Registration failed: " + e.getMessage());
+            // 可以在這裡將錯誤訊息傳遞至註冊頁面
         }
     }
 }
