@@ -3,20 +3,13 @@ package com.systex.hw3edit.controller;
 import com.systex.hw3edit.model.Users;
 import com.systex.hw3edit.repository.UsersRepository;
 import com.systex.hw3edit.service.UsersService;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.servlet.ModelAndView;
-
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 @Controller
 public class UsersController {
@@ -55,19 +48,14 @@ public class UsersController {
     /**
      * 處理 AJAX 登入邏輯
      */
-    @PostMapping(value = "/login", headers = "X-Requested-With=XMLHttpRequest")
-    public String handleAjaxLogin(HttpServletRequest request, HttpSession session) {
-        String email = request.getParameter("email");
-        String password = request.getParameter("password");
-
-        try {
-            Users loginUser = usersService.login(email, password);
-            session.setAttribute("loggedIn", loginUser);
-            session.setAttribute("username", loginUser.getUsername());
-            return "success"; // 返回成功訊息
-        } catch (Exception e) {
-            return e.getMessage(); // 返回錯誤訊息
+    @PostMapping(value = "/ajaxLogin", headers = "X-Requested-With=XMLHttpRequest")
+    public ModelAndView handleAjaxLogin(HttpServletRequest request,HttpSession session, Model model) {
+        Object error = request.getAttribute("error");
+        if(session.getAttribute("loggedIn") != null) {
+            return new ModelAndView("redirect:/lottery/main.jsp");
         }
+        model.addAttribute("error", error);
+        return new ModelAndView("ajaxLogin");
     }
 
     /**

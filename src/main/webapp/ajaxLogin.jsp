@@ -77,25 +77,28 @@
 
         // 發送 AJAX 請求
         $.ajax({
-            url: '<%= request.getContextPath() %>/login', // 登入處理的 Controller 路徑
-            type: 'POST',
-            data: formData,
-            success: function(response) {
-                if (response === 'success') {
-                    // 登入成功，重定向到主頁面
-                    window.location.href = '<%= request.getContextPath() %>/lottery/main.jsp';
+            url: '/eBiz/ajaxLogin',  // AJAX 登入請求的 URL
+            method: 'POST',
+            data: JSON.stringify(formData),
+            contentType: 'application/json',
+            success: function(data) {
+                if (data.status === 'success') {
+                    // 登入成功，轉向主頁
+                    window.location.href = '/lottery/main.jsp';
                 } else {
                     // 顯示錯誤訊息
-                    $('#error-message').text(response).show();
+                    $('#error-message').text(data.message).show();
                 }
             },
             error: function(xhr, status, error) {
-                // 如果發生錯誤，顯示錯誤訊息
-                $('#error-message').text('登入失敗，請重試。').show();
+                // 顯示錯誤訊息
+                $('#error-message').text("發生錯誤，請重試。").show();
+                console.error(error);
             }
         });
     });
 </script>
+
 
 </body>
 </html>

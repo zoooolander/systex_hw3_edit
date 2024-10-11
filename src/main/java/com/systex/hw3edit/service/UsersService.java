@@ -6,9 +6,6 @@ import com.systex.hw3edit.model.Users;
 import com.systex.hw3edit.repository.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.servlet.ModelAndView;
 
 @Service
 public class UsersService {
@@ -19,7 +16,7 @@ public class UsersService {
     /**
      * 登入處理
      */
-    public Users login(String email, String password) throws Exception {
+    public Users verifyAccount(String email, String password) throws Exception {
         Users loginUser = usersRepository.findByEmailAndPassword(email, password);
 
         // 檢查帳號密碼是否正確
