@@ -84,7 +84,7 @@
             success: function(data) {
                 if (data.status === 'success') {
                     // 登入成功，轉向主頁
-                    window.location.href = '/lottery/main.jsp';
+                    window.location.href = '/eBiz/lottery/main.jsp';
                 } else {
                     // 顯示錯誤訊息
                     $('#error-message').text(data.message).show();

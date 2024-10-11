@@ -94,22 +94,53 @@ public class AuthenticationFilter extends OncePerRequestFilter {
         // 獲取用戶名和密碼
         String email = request.getParameter("email");
         String password = request.getParameter("password");
-
-        // 嘗試查詢用戶
+        Users loginUser = null;
         try {
-            user = usersService.verifyAccount(email, password);
-            // 登入成功，將用戶存入 session
-            if (session == null) {
-                session = request.getSession(); // 如果 session 不存在，創建一個新的
-            }
-            session.setAttribute("loggedIn", user);
+            loginUser = usersService.verifyAccount(email, password);
 
         } catch (Exception e) {
-            // 找不到用戶，返回錯誤信息並轉發回登入頁
-            request.setAttribute("error", "電子信箱或密碼錯誤!");
-
+            request.setAttribute("error", "請先登入");
+            return;
         }
-
+        if (loginUser != null) {
+            session.setAttribute("loggedIn", loginUser);
+            session.setAttribute("username", loginUser.getUsername());
+        } else {
+            request.setAttribute("error", "電子信箱或密碼錯誤");
+        }
+//    }
+//        // 嘗試查詢用戶
+//        try {
+//            user = usersService.verifyAccount(email, password);
+//            // 登入成功，將用戶存入 session
+//            if (session == null) {
+//                session = request.getSession(); // 如果 session 不存在，創建一個新的
+//            }
+//            session.setAttribute("loggedIn", user);
+//
+//        } catch (Exception e) {
+//            // 找不到用戶，返回錯誤信息並轉發回登入頁
+//            request.setAttribute("error", "電子信箱或密碼錯誤!");
+//
+//        }
+//    private void handleLogin(HttpServletRequest request, HttpSession session) {
+//        String email = request.getParameter("email");
+//        String password = request.getParameter("password");
+//        Users loginUser = null;
+//        try {
+//            loginUser = usersService.login(email, password);
+//
+//        } catch (Exception e) {
+//            request.setAttribute("error", "請先登入");
+//            return;
+//        }
+//        if (loginUser != null) {
+//            session.setAttribute("loggedIn", loginUser);
+//            session.setAttribute("username", loginUser.getUsername());
+//        } else {
+//            request.setAttribute("error", "電子信箱或密碼錯誤");
+//        }
+//    }
     }
 
     /**
@@ -134,7 +165,7 @@ public class AuthenticationFilter extends OncePerRequestFilter {
         // 驗證用戶
         Users verifyUser = usersService.verifyAccount(email, password);
 
-        // 返回 JSON 響應
+        // 返回 JSON response
         response.setContentType("application/json;charset=UTF-8");
         if (verifyUser == null) {
             response.getWriter().write("{\"status\":\"error\", \"message\":\"電子信箱或密碼錯誤!\"}");
@@ -147,8 +178,9 @@ public class AuthenticationFilter extends OncePerRequestFilter {
         }
     }
 
-
-
+    /**
+     * 處理註冊邏輯
+     */
     private void handleRegister(HttpServletRequest request, HttpServletResponse response, HttpSession session)
             throws ServletException, IOException {
 
@@ -157,7 +189,7 @@ public class AuthenticationFilter extends OncePerRequestFilter {
         // 獲取用戶名和密碼
         String email = request.getParameter("email");
         String password = request.getParameter("password");
-        String username = request.getParameter("confirmPassword");
+        String username = request.getParameter("username");
 
         // 檢查email是否已存在
         try {

@@ -69,19 +69,6 @@ public class UsersController {
     /**
      * 處理註冊邏輯
      */
-//    @PostMapping("/register")
-//    public ModelAndView handleRegister(@ModelAttribute Users user, HttpServletRequest request, Model model) {
-//        try {
-//            if ("register success".equals(usersService.register(user.getEmail(), user.getPassword(), user.getUsername()))) {
-//                return new ModelAndView("redirect:/login"); // 註冊成功後重定向至登入頁面
-//            }
-//        } catch (Exception e) {
-//            model.addAttribute("error", e.getMessage()); // 設置正確的錯誤訊息
-//        }
-//
-//        return new ModelAndView("register"); // 返回註冊頁面並顯示錯誤訊息
-//    }
-
     @PostMapping("/register")
     public ModelAndView handleRegister(HttpServletRequest request, HttpSession session, Model model) {
         // 取得錯誤訊息
@@ -93,7 +80,6 @@ public class UsersController {
         if(error != null) {
             return new ModelAndView("register");
         }
-
         return new ModelAndView("redirect:/login"); // 註冊成功後重定向到登入頁面
     }
 
