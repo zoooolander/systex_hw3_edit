@@ -40,15 +40,18 @@ public class UsersController {
      * 處理登入邏輯
      */
     @PostMapping("/login")
-    public ModelAndView handleLogin(HttpSession session, Model model) {
+    public ModelAndView handleLogin(HttpServletRequest request,HttpSession session, Model model) {
+        // 取得錯誤訊息
+        Object error = request.getAttribute("error");
+
         if (session.getAttribute("loggedIn") != null) {
             return new ModelAndView("redirect:/lottery/main.jsp");
         }
 
-        model.addAttribute("error", "找不到用戶，請先註冊");
+        model.addAttribute("error", error);
         return new ModelAndView("login");
     }
-    
+
     /**
      * 處理 AJAX 登入邏輯
      */
@@ -72,25 +75,39 @@ public class UsersController {
      */
     @GetMapping("/register")
     public ModelAndView showRegisterPage() {
-        return new ModelAndView("register.jsp", "user", new Users());
+        return new ModelAndView("register", "user", new Users());
     }
 
     /**
      * 處理註冊邏輯
      */
+//    @PostMapping("/register")
+//    public ModelAndView handleRegister(@ModelAttribute Users user, HttpServletRequest request, Model model) {
+//        try {
+//            if ("register success".equals(usersService.register(user.getEmail(), user.getPassword(), user.getUsername()))) {
+//                return new ModelAndView("redirect:/login"); // 註冊成功後重定向至登入頁面
+//            }
+//        } catch (Exception e) {
+//            model.addAttribute("error", e.getMessage()); // 設置正確的錯誤訊息
+//        }
+//
+//        return new ModelAndView("register"); // 返回註冊頁面並顯示錯誤訊息
+//    }
+
     @PostMapping("/register")
-    public ModelAndView handleRegister(@ModelAttribute Users user, HttpServletRequest request, Model model) {
-        try {
-            if ("register success".equals(usersService.register(user.getEmail(), user.getPassword(), user.getUsername()))) {
-                return new ModelAndView("redirect:/login"); // 註冊成功後重定向至登入頁面
-            }
-        } catch (Exception e) {
-            model.addAttribute("error", e.getMessage()); // 設置正確的錯誤訊息
+    public ModelAndView handleRegister(HttpServletRequest request, HttpSession session, Model model) {
+        // 取得錯誤訊息
+        Object error = request.getAttribute("error");
+
+        model.addAttribute("error", error);
+
+        // 如果有錯誤訊息，返回註冊頁面
+        if(error != null) {
+            return new ModelAndView("register");
         }
 
-        return new ModelAndView("register"); // 返回註冊頁面並顯示錯誤訊息
+        return new ModelAndView("redirect:/login"); // 註冊成功後重定向到登入頁面
     }
-
 
     /**
      * 處理登出邏輯
