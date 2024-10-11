@@ -14,7 +14,7 @@ public class UsersService {
     private UsersRepository usersRepository;
 
     /**
-     * 登入處理
+     * 登入處理，驗證是否有會員身分
      */
     public Users verifyAccount(String email, String password) throws Exception {
         Users loginUser = usersRepository.findByEmailAndPassword(email, password);
@@ -28,29 +28,12 @@ public class UsersService {
     }
 
     /**
-     * 註冊處理
+     * 註冊處理，檢查此用戶是否存在
      */
-    public String register(String email, String password, String username) throws Exception {
-        // 檢查此 email 是否已存在
-        Users existedUser = usersRepository.findByEmail(email);
-        if (existedUser != null) {
-            throw new Exception("此電子信箱已存在"); // 拋出異常
-        }
-
-        // 創建新用戶並保存
-        Users newUser = new Users();
-        newUser.setEmail(email);
-        newUser.setPassword(password);
-        newUser.setUsername(username);
-        usersRepository.save(newUser); // 保存新用戶
-
-        return "register success"; // 返回成功訊息
-    }
-
     public void checkIfUserExists(String email) throws UserAlreadyExistsException {
-        Users member = usersRepository.findByEmail(email);
+        Users existedUser = usersRepository.findByEmail(email);
 
-        if (member != null) {
+        if (existedUser != null) {
             throw new UserAlreadyExistsException("用戶已存在");
         }
     }
@@ -58,6 +41,5 @@ public class UsersService {
     public void save(Users user) {
         usersRepository.save(user);
     }
-
 
 }

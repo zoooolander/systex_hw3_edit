@@ -24,6 +24,10 @@ public class AuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
+        // 設置編碼
+        request.setCharacterEncoding("UTF-8");
+        response.setCharacterEncoding("UTF-8");
+
         HttpSession session = request.getSession();
         Object user = session.getAttribute("loggedIn");
 
@@ -39,23 +43,17 @@ public class AuthenticationFilter extends OncePerRequestFilter {
             return;
         }
 
-        // 處理登入請求
+        // 處理登入和註冊請求
         if (isLoginRequest(request)) {
             handleLogin(request, response, session);
-        }
-
-        // 判斷是否為 AJAX 登入請求
-        if (isAjaxLoginRequest(request)) {
+        } else if (isAjaxLoginRequest(request)) {
             try {
                 handleAjaxLogin(request, response, session);
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
-            return; // 直接返回，不再調用後續的 filterChain
-        }
-
-        // 處理註冊請求
-        if (isRegisterRequest(request)) {
+            return; // AJAX請求直接返回，不繼續處理其他請求
+        } else if (isRegisterRequest(request)) {
             handleRegister(request, response, session);
         }
 
@@ -89,8 +87,6 @@ public class AuthenticationFilter extends OncePerRequestFilter {
     private void handleLogin(HttpServletRequest request, HttpServletResponse response,HttpSession session)
             throws ServletException, IOException {
 
-        Users user;
-
         // 獲取用戶名和密碼
         String email = request.getParameter("email");
         String password = request.getParameter("password");
@@ -108,39 +104,6 @@ public class AuthenticationFilter extends OncePerRequestFilter {
         } else {
             request.setAttribute("error", "電子信箱或密碼錯誤");
         }
-//    }
-//        // 嘗試查詢用戶
-//        try {
-//            user = usersService.verifyAccount(email, password);
-//            // 登入成功，將用戶存入 session
-//            if (session == null) {
-//                session = request.getSession(); // 如果 session 不存在，創建一個新的
-//            }
-//            session.setAttribute("loggedIn", user);
-//
-//        } catch (Exception e) {
-//            // 找不到用戶，返回錯誤信息並轉發回登入頁
-//            request.setAttribute("error", "電子信箱或密碼錯誤!");
-//
-//        }
-//    private void handleLogin(HttpServletRequest request, HttpSession session) {
-//        String email = request.getParameter("email");
-//        String password = request.getParameter("password");
-//        Users loginUser = null;
-//        try {
-//            loginUser = usersService.login(email, password);
-//
-//        } catch (Exception e) {
-//            request.setAttribute("error", "請先登入");
-//            return;
-//        }
-//        if (loginUser != null) {
-//            session.setAttribute("loggedIn", loginUser);
-//            session.setAttribute("username", loginUser.getUsername());
-//        } else {
-//            request.setAttribute("error", "電子信箱或密碼錯誤");
-//        }
-//    }
     }
 
     /**

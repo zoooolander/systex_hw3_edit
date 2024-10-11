@@ -20,19 +20,22 @@
             background-color: #388E3C;
         }
         /* 灰字提示 */
-        .ajax-notice {
+        .top-left-text {
             position: absolute;
             top: 10px;
             left: 10px;
             color: gray;
-            font-size: 0.9rem;
+            font-size: 14px;
         }
     </style>
 </head>
 <body>
 
 <!-- 顯示 AJAX 提示訊息 -->
-<div class="ajax-notice">這是 AJAX 登入畫面</div>
+<div class="top-left-text">
+    這是 AJAX 登入畫面 |
+    <a href="<%= request.getContextPath() %>/login.jsp"  style="margin-left: 5px;">切換到原本登入頁面</a>
+</div>
 
 <div class="container d-flex justify-content-center align-items-center" style="height: 100vh;">
     <div class="card p-4" style="width: 300px;">
@@ -98,7 +101,6 @@
         });
     });
 </script>
-
 
 </body>
 </html>
