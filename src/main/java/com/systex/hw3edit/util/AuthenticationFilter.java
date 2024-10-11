@@ -78,7 +78,7 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 
     // 判斷是否為不需要登入的請求（如 login、register）
     private boolean isAllowedWithoutLogin(String requestURI) {
-        return requestURI.contains("/login") || requestURI.contains("/ajaxLogin") || requestURI.contains("/register");
+        return requestURI.contains("/login") || requestURI.contains("/ajaxLogin") || requestURI.contains("/register")|| requestURI.contains("/ajaxRegister");
     }
 
     /**
@@ -175,5 +175,63 @@ public class AuthenticationFilter extends OncePerRequestFilter {
             // 保存失敗，返回錯誤信息
             request.setAttribute("error", "註冊失敗，請重試");
         }
+    }
+    /**
+     * 處理 AJAX 註冊邏輯
+     */
+    private void handleAjaxRegister(HttpServletRequest request, HttpServletResponse response, HttpSession session) throws Exception {
+        Users newUser;
+        // 讀取 JSON 資料
+        StringBuilder jsonBuilder = new StringBuilder();
+        try (BufferedReader reader = request.getReader()) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                jsonBuilder.append(line);
+            }
+        }
+
+        // 解析 JSON 為用戶名和密碼
+        ObjectMapper objectMapper = new ObjectMapper();
+        Users data = objectMapper.readValue(jsonBuilder.toString(), Users.class);
+        String email = data.getEmail();
+        String password = data.getPassword();
+        String username = data.getUsername();
+
+        // 驗證用戶
+        try {
+            usersService.checkIfUserExists(email);
+        } catch (Exception e) {
+            // 用戶名已存在，返回錯誤信息
+            request.setAttribute("error", "電子信箱已存在");
+            return;
+        }
+        // 創建新用戶
+        newUser = new Users();
+        newUser.setEmail(email);
+        newUser.setPassword(password);
+        newUser.setUsername(username);
+
+        try {
+            usersService.save(newUser);
+            session.setAttribute("loggedIn", newUser);
+            response.getWriter().write("{\"status\":\"success\"}");
+        } catch (Exception e) {
+            // 保存失敗，返回錯誤信息
+            request.setAttribute("error", "註冊失敗，請重試");
+            response.getWriter().write("{\"status\":\"error\", \"message\":\"電子信箱或密碼錯誤!\"}");
+
+        }
+
+        // 返回 JSON response
+        response.setContentType("application/json;charset=UTF-8");
+//        if (newUser != null) {
+//            response.getWriter().write("{\"status\":\"error\", \"message\":\"電子信箱或密碼錯誤!\"}");
+//            return;
+//        } else {
+//            // 將用戶保存到 session
+//            session.setAttribute("loggedIn", newUser);
+//            response.getWriter().write("{\"status\":\"success\"}");
+//            return;
+//        }
     }
 }

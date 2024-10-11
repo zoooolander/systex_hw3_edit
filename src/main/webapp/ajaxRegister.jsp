@@ -19,10 +19,21 @@
         .btn-custom:hover {
             background-color: #388E3C;
         }
+        /* 灰字提示 */
+        .top-left-text {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            color: gray;
+            font-size: 14px;
+        }
     </style>
 </head>
 <body>
-
+<!-- 顯示 AJAX 提示訊息 -->
+<div class="top-left-text">
+    這是 AJAX 註冊畫面
+</div>
 <div class="container d-flex justify-content-center align-items-center" style="height: 100vh;">
     <div class="card p-4" style="width: 300px;">
         <h1 class="text-center mb-4">註冊</h1>
@@ -79,7 +90,7 @@
             success: function(data) {
                 if (data.status === 'success') {
                     // 註冊成功，轉向登入頁
-                    window.location.href = '/eBiz/login.jsp';
+                    window.location.href = '/eBiz/ajaxLogin.jsp';
                 } else {
                     // 顯示錯誤訊息
                     $('#error-message').text(data.message).show();
