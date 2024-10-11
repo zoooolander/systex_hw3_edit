@@ -48,31 +48,24 @@ public class UsersController {
         model.addAttribute("error", "找不到用戶，請先註冊");
         return new ModelAndView("login");
     }
+    
+    /**
+     * 處理 AJAX 登入邏輯
+     */
+    @PostMapping(value = "/login", headers = "X-Requested-With=XMLHttpRequest")
+    public String handleAjaxLogin(HttpServletRequest request, HttpSession session) {
+        String email = request.getParameter("email");
+        String password = request.getParameter("password");
 
-
-//    /**
-//     * 處理 AJAX 登入邏輯
-//     */
-//    @PostMapping("/ajax_login")
-//    public ResponseEntity<Map<String, Object>> handleAjaxLogin(@RequestBody Map<String, String> loginData,
-//                                                               HttpSession session) {
-//        String email = loginData.get("email");
-//        String password = loginData.get("password");
-//
-//        Users user = usersRepository.findByEmailAndPassword(email, password);
-//        Map<String, Object> response = new HashMap<>();
-//
-//        if (user != null) {
-//            session.setAttribute("loggedIn", user);
-//            session.setAttribute("username", user.getUsername());
-//            response.put("success", true);
-//        } else {
-//            response.put("success", false);
-//            response.put("message", "Invalid email or password");
-//        }
-//
-//        return ResponseEntity.ok(response);
-//    }
+        try {
+            Users loginUser = usersService.login(email, password);
+            session.setAttribute("loggedIn", loginUser);
+            session.setAttribute("username", loginUser.getUsername());
+            return "success"; // 返回成功訊息
+        } catch (Exception e) {
+            return e.getMessage(); // 返回錯誤訊息
+        }
+    }
 
     /**
      * 顯示註冊頁面
@@ -88,14 +81,16 @@ public class UsersController {
     @PostMapping("/register")
     public ModelAndView handleRegister(@ModelAttribute Users user, HttpServletRequest request, Model model) {
         try {
-            usersService.register(user.getEmail(), user.getPassword(), user.getUsername());
-            return new ModelAndView("redirect:/login"); // 註冊成功後重定向至登入頁面
+            if ("register success".equals(usersService.register(user.getEmail(), user.getPassword(), user.getUsername()))) {
+                return new ModelAndView("redirect:/login"); // 註冊成功後重定向至登入頁面
+            }
         } catch (Exception e) {
-            //ModelAndView modelAndView = new ModelAndView("register");
-            model.addAttribute("error", e.getMessage()); // 設置錯誤訊息
-            return new ModelAndView("register"); // 返回註冊頁面並顯示錯誤訊息
+            model.addAttribute("error", e.getMessage()); // 設置正確的錯誤訊息
         }
+
+        return new ModelAndView("register"); // 返回註冊頁面並顯示錯誤訊息
     }
+
 
     /**
      * 處理登出邏輯

@@ -66,7 +66,9 @@ public class AuthenticationFilter extends OncePerRequestFilter {
         return requestURI.contains("/login") || requestURI.contains("/ajax_login") || requestURI.contains("/register");
     }
 
-    // 處理登入邏輯
+    /**
+     * 處理登入驗證
+     */
     private void handleLogin(HttpServletRequest request, HttpSession session) {
         String email = request.getParameter("email");
         String password = request.getParameter("password");
@@ -86,7 +88,9 @@ public class AuthenticationFilter extends OncePerRequestFilter {
         }
     }
 
-    // 處理註冊邏輯
+    /**
+     * 處理註冊驗證
+     */
     private void handleRegister(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
         String email = request.getParameter("email");
         String password = request.getParameter("password");
@@ -97,8 +101,9 @@ public class AuthenticationFilter extends OncePerRequestFilter {
             // 註冊成功後可重定向至登入頁面
             response.sendRedirect(request.getContextPath() + "/login");
         } catch (Exception e) {
-            request.setAttribute("error", "Registration failed: " + e.getMessage());
-            // 可以在這裡將錯誤訊息傳遞至註冊頁面
+            request.setAttribute("error", e.getMessage()); // 傳遞錯誤訊息
+            // 可以在這裡將錯誤訊息傳遞至註冊頁面，或者返回錯誤處理邏輯
         }
     }
+
 }
