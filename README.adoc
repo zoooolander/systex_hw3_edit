@@ -58,6 +58,11 @@ cURL 特別適合於需要自動化的環境，例如在部署過程中或在 CI
 
 == HW3_edit 專案相關資訊
 
-若須測試此專案，知有權限之人員可使用此組帳號密碼：
+原登入頁面網址：http://localhost:8080/eBiz/login.jsp
+
+AJAX登入頁面網址：http://localhost:8080/eBiz/ajaxLogin.jsp
+
+若須測試此專案，有權限之人員可使用此組帳號密碼：
+
 * **電子郵件**: chris@gmail.com
 * **密碼**: 0000
