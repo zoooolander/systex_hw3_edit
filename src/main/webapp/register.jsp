@@ -19,9 +19,22 @@
         .btn-custom:hover {
             background-color: #388E3C;
         }
+        /* 灰字樣式 */
+        .top-left-text {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            color: gray;
+            font-size: 14px;
+        }
     </style>
 </head>
 <body>
+<!-- 左上角灰字 -->
+<div class="top-left-text">
+    這是原本的註冊頁面
+<%--    <a href="<%= request.getContextPath() %>/ajaxLogin.jsp"  style="margin-left: 5px;">切換到 AJAX 登入頁面</a>--%>
+</div>
 <div class="container d-flex justify-content-center align-items-center" style="height: 100vh;">
     <div class="card p-4" style="width: 300px;">
         <h1 class="text-center mb-4">註冊</h1>

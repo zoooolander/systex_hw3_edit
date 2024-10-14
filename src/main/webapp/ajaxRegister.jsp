@@ -61,7 +61,7 @@
         </form>
 
         <p class="mt-3 text-center">
-            <a href="login.jsp">已有帳號？立即登入</a>
+            <a href="ajaxLogin.jsp">已有帳號？立即登入</a>
         </p>
     </div>
 </div>

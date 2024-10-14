@@ -57,20 +57,25 @@ public class UsersController {
     }
 
     /**
-     * 處理註冊邏輯
+     * 處理 register 和 Ajax register 邏輯
      */
-    @PostMapping("/register")
+    @PostMapping(value = {"/register", "/ajaxRegister"})
     public ModelAndView handleRegister(HttpServletRequest request, HttpSession session, Model model) {
         // 取得錯誤訊息
         Object error = request.getAttribute("error");
 
         model.addAttribute("error", error);
 
+        // 判斷是否為 AJAX 請求
+        if ("XMLHttpRequest".equals(request.getHeader("X-Requested-With"))) {
+            return new ModelAndView("ajaxRegister");
+        }
+
         // 如果有錯誤訊息，返回註冊頁面
         if(error != null) {
             return new ModelAndView("register");
         }
-        return new ModelAndView("redirect:/login"); // 註冊成功後重定向到登入頁面
+        return new ModelAndView("redirect:/ajaxRegister"); // 註冊成功後重定向到登入頁面
     }
 
     /**

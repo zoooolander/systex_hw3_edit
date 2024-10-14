@@ -58,8 +58,8 @@
             <button type="submit" class="btn btn-custom w-100">登入</button>
         </form>
         <p class="mt-3 text-center">
-            <a href="<%= request.getContextPath() %>/register" onclick="event.preventDefault();
-                    window.location.href='<%= request.getContextPath() %>/register.jsp';">還沒有帳號？立即註冊</a>
+            <a href="<%= request.getContextPath() %>/ajaxRegister" onclick="event.preventDefault();
+                    window.location.href='<%= request.getContextPath() %>/ajaxRegister.jsp';">還沒有帳號？立即註冊</a>
         </p>
     </div>
 </div>

@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -43,7 +44,7 @@ public class AuthenticationFilter extends OncePerRequestFilter {
             return;
         }
 
-        // 處理登入和註冊請求
+        // todo
         if (isLoginRequest(request)) {
             handleLogin(request, response, session);
         } else if (isAjaxLoginRequest(request)) {
@@ -55,12 +56,20 @@ public class AuthenticationFilter extends OncePerRequestFilter {
             return; // AJAX請求直接返回，不繼續處理其他請求
         } else if (isRegisterRequest(request)) {
             handleRegister(request, response, session);
+        } else if (isAjaxRegisterRequest(request)) {
+            try {
+                handleAjaxRegister(request, response, session);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+            return; // AJAX註冊請求直接返回，不繼續處理其他請求
         }
 
         // 繼續處理其他請求
         filterChain.doFilter(request, response);
         return;
     }
+
 
     // 判斷是否為登入請求
     private boolean isLoginRequest(HttpServletRequest request) {
@@ -74,6 +83,10 @@ public class AuthenticationFilter extends OncePerRequestFilter {
     // 判斷是否為註冊請求
     private boolean isRegisterRequest(HttpServletRequest request) {
         return request.getRequestURI().contains("/register") && request.getMethod().equalsIgnoreCase("POST");
+    }
+    // 判斷是否為 AJAX 登入請求
+    private boolean isAjaxRegisterRequest(HttpServletRequest request) {
+        return request.getRequestURI().contains("/ajaxRegister") && request.getMethod().equalsIgnoreCase("POST");
     }
 
     // 判斷是否為不需要登入的請求（如 login、register）
@@ -198,11 +211,13 @@ public class AuthenticationFilter extends OncePerRequestFilter {
         String username = data.getUsername();
 
         // 驗證用戶
+        response.setContentType("application/json;charset=UTF-8");
         try {
             usersService.checkIfUserExists(email);
         } catch (Exception e) {
             // 用戶名已存在，返回錯誤信息
-            request.setAttribute("error", "電子信箱已存在");
+            response.getWriter().write("{\"status\":\"error\", \"message\":\"此電子信箱已存在\"}");
+
             return;
         }
         // 創建新用戶
@@ -211,6 +226,7 @@ public class AuthenticationFilter extends OncePerRequestFilter {
         newUser.setPassword(password);
         newUser.setUsername(username);
 
+
         try {
             usersService.save(newUser);
             session.setAttribute("loggedIn", newUser);
@@ -218,20 +234,8 @@ public class AuthenticationFilter extends OncePerRequestFilter {
         } catch (Exception e) {
             // 保存失敗，返回錯誤信息
             request.setAttribute("error", "註冊失敗，請重試");
-            response.getWriter().write("{\"status\":\"error\", \"message\":\"電子信箱或密碼錯誤!\"}");
+            response.getWriter().write("{\"status\":\"error\", \"message\":\"Registration fail\"}");
 
         }
-
-        // 返回 JSON response
-        response.setContentType("application/json;charset=UTF-8");
-//        if (newUser != null) {
-//            response.getWriter().write("{\"status\":\"error\", \"message\":\"電子信箱或密碼錯誤!\"}");
-//            return;
-//        } else {
-//            // 將用戶保存到 session
-//            session.setAttribute("loggedIn", newUser);
-//            response.getWriter().write("{\"status\":\"success\"}");
-//            return;
-//        }
     }
 }
