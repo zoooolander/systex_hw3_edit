@@ -75,7 +75,7 @@ public class UsersController {
         if(error != null) {
             return new ModelAndView("register");
         }
-        return new ModelAndView("redirect:/ajaxRegister"); // 註冊成功後重定向到登入頁面
+        return new ModelAndView("ajaxLogin"); // 註冊成功後重定向到登入頁面
     }
 
     /**

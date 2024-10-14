@@ -98,7 +98,7 @@
             },
             error: function(xhr, status, error) {
                 // 顯示錯誤訊息
-                $('#error-message').text("發生錯誤，請重試。").show();
+                $('#error-message').text(error.message).show();
                 console.error(error);
             }
         });
