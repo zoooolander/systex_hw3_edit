@@ -15,7 +15,7 @@ public class UsersService {
     private UsersRepository usersRepository;
 
     /**
-     * 登入處理，驗證是否有會員身分
+     * 登入處理，驗證使用者是否已具有系統用戶身分
      */
     public Users verifyAccount(String email, String password) throws UsersException {
         Users loginUser = usersRepository.findByEmailAndPassword(email, password);
